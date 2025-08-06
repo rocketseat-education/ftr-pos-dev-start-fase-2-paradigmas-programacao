@@ -72,3 +72,54 @@ function explore(){
         heroPotions++;
     }
 }
+
+function battle(){
+    let monsterHp = 15;
+    let monsterStrength = 3;
+
+    while(heroHp > 0 && monsterHp > 0) {
+        showStatus(heroName, heroHp, heroPotions, monstersDefeated);
+        console.log(`Monster Status -> HP: ${monsterHp}`);
+
+        //Player's turn
+        console.log("Your turn 1. Normal Attack 2. Furious Attack (2 hits)");
+        const attack = prompt(">> ");
+
+        if (attack === "2") {
+            console.log("You use Furious Attack!");
+            for (let i = 0; i < 2; i++) {
+                if (monsterHp > 0) {
+                    const heroDamage = calculateDamage(3);
+                    monsterHp -= heroDamage;
+                    console.log(`Hit ${i + 1}: You deal ${heroDamage} damage!`);
+                }
+            }
+        } else {
+            const heroDamage = calculateDamage(5);
+            monsterHp -= heroDamage;
+            console.log(`You attack and deal ${heroDamage} damage!`);
+        }
+
+        //Monster's turn
+        if (monsterHp > 0) {
+            const monsterDamage = calculateDamage(monsterStrength);
+            heroHp -= monsterDamage;
+            console.log(`The Goblin strikes back and deals ${monsterDamage} damage!`);
+        }
+
+        //Battle outcome
+        if (heroHp > 0) {
+            console.log("You defeated the Goblin!");
+            monstersDefeated++;
+        }else{
+            console.log("You were defeated... Your journey ends here.");
+        }
+    }
+}
+
+function calculateDamage(strength){
+    const variation = Math.floor(Math.random() * 3) - 1; // -1, 0, or +1
+    const damage = strength + variation;
+    
+    return damage > 0 ? damage : 1;
+}
