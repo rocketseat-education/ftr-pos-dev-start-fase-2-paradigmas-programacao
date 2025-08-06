@@ -50,3 +50,25 @@ function showMenu() {
     console.log("3. Give up");
     return prompt(">> ");
 }
+
+function usePotion() {
+    if (heroPotions > 0) {
+        console.log("You drink a healing potion and recover 5 HP.");
+        heroHp += 5;
+        heroPotions--;
+    } else {
+        console.log("You have no more potions!");
+    }
+}
+
+function explore(){
+    console.log("\nYou open a door and enter a new room...");
+
+    if (Math.random() < 0.5) {
+        console.log("Suddenly, a Goblin jumps out of the shadows!");
+        battle();
+    } else {
+        console.log("The room is empty. You find a potion!");
+        heroPotions++;
+    }
+}
