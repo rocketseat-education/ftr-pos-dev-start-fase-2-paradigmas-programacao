@@ -4,48 +4,64 @@ const Monster = require("./monster.js");
 const Mage = require("./mage.js");
 const Warrior = require("./warrior.js");
 
-function calculateDamage(strength){
-    return Math.floor(Math.random() * 3) - 1;
-}
+function hordeBattle(player) {
+    const horde = [
+        new Monster("Goblin 1", 25, 5),
+        new Monster("Goblin 2", 15, 7),
+        new Monster("Goblin 3", 20, 6),
+    ];
 
-function battle(player){
-    const monster = new Monster("Goblin");
-    console.log(`\nA wild ${monster.getName()} appears!`);
+    const totalHordeHp = horde.reduce((sum, monster) => sum + monster.getHp(), 0);
+    console.log(`\nA fearsome horde appears! Their combined health is ${totalHordeHp} HP.`);
 
-    while(player.getHp() > 0 && monster.getHp() > 0) {
-        player.showStatus();
-        console.log(`Monster Status -> HP: ${monster.getHp()}`);
+    while (player.getHp() > 0) {
+        const livingMonsters = horde.filter((monster) => monster.getHp() > 0);
 
-        console.log("Your turn 1. Normal Attack 2. Furious Attack (2 hits)");
-        const attackChoice = prompt(">> ");
-
-        if (attackChoice === "2") {
-            console.log("You use Furious Attack!");
-            player.attack(monster);
-            if (monster.getHp() > 0) {
-                player.attack(monster);
-            }
-        } else {
-            player.attack(monster);
+        if (livingMonsters.length === 0) {
+            break;
         }
 
-        if (monster.getHp() > 0) {
-            const monsterDamage = calculateDamage(monster.getStrength());
-            console.log(`The ${monster.getName()} strikes back and deals ${monsterDamage} damage!`);
-            player.takeDamage(monsterDamage);
+        player.showStatus();
+
+        const monsterStatusList = livingMonsters.map((monster, index) => {
+            return `${index + 1}. ${monster.getName()} (HP: ${monster.getHp()})`
+        });
+
+        console.log("\n--- Horde Status ---\n" + monsterStatusList.join("\n"));
+
+        const targetChoice = prompt("Choose your target (1, 2, etc.) >>");
+        const targetIndex = Number(targetChoice) - 1;
+
+        if (targetIndex >= 0 && targetIndex < livingMonsters.length) {
+            const target = livingMonsters[targetIndex];
+            player.attack(target);
+            if (target.getHp() <= 0 && !target.isDefeated) {
+                console.log(`The ${target.getName()} has been slain!`);
+                player.incrementMonstesDefeated();
+                target.isDefeated = true;
+            }
+        } else {
+            console.log("Invalid target. You hesitated and missed your turn!");
+        }
+
+        const survivingMonsters = horde.filter((monster) => monster.getHp() > 0);
+        if (survivingMonsters.length > 0) {
+            console.log("\nThe horde strikes back!");
+            for (const monster of survivingMonsters) {
+                monster.attack(player);
+                if (player.getHp() === 0) break;
+            }
         }
 
         if (player.getHp() > 0) {
-            console.log(`You defeated the ${monster.getName()}!`);
-            player.incrementMonstesDefeated();
-        }else{
-            console.log("You were defeated... Your journey ends here.");
+            console.log("\nVictory! You defeated the entire horde!");
         }
-        player.showStatus()
     }
+
 }
 
-function explore(player){
+
+function explore(player) {
     console.log("You explore the next room...");
 
     if (Math.random() < 0.5) {
@@ -54,9 +70,9 @@ function explore(player){
         console.log("The room is empty, you find a potion!");
         if (player instanceof Warrior) {
             player.addStaminaPotion();
-        } else if (player instanceof Mage){
+        } else if (player instanceof Mage) {
             player.addManaPotion();
-        }else{
+        } else {
             player.addHpPotion();
         }
     }
@@ -97,12 +113,12 @@ while (player.getHp() > 0) {
             let potionType;
             if (player instanceof Warrior) {
                 potionType = prompt("Use which potion? (1) HP or (2) Stamina >>");
-                if(potionType === "1") player.useHpPotion();
+                if (potionType === "1") player.useHpPotion();
                 else if (potionType === "2") player.useStaminaPotion();
                 else console.log("Invalid potion choice.");
-            } else if (player instanceof Mage){
+            } else if (player instanceof Mage) {
                 potionType = prompt("Use which potion? (1) HP or (2) Mana >>");
-                if(potionType === "1") player.useHpPotion();
+                if (potionType === "1") player.useHpPotion();
                 else if (potionType === "2") player.useManaPotion();
                 else console.log("Invalid potion choice.");
             }
@@ -114,7 +130,7 @@ while (player.getHp() > 0) {
             console.log("Invalid option!");
     }
 
-    if(choice === "3") break;
+    if (choice === "3") break;
 }
 
 if (player.getHp() <= 0) {
