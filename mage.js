@@ -48,5 +48,6 @@ class Mage extends Hero{
         console.log(`Potions -> HP: ${this.getHpPotions()} | Mana: ${this.getManaPotions()}`);
         console.log(`Monsters Defeated: ${this.getMonstersDefeated()}`);
     }
-
 }
+
+module.exports = Mage;
