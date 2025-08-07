@@ -1,44 +1,42 @@
 const Character = require("./character.js");
 
-class Hero extends Character{
-    constructor(name) {
-        super(50);
-        this.name = name;
-        this._hp = 50;
-        this._potions = 3;
+class Hero extends Character {
+    constructor(name, hp, strength) {
+        super(name, hp, strength);
+        this._HpPotions = 3;
         this.monstersDefeated = 0;
-    }
-
-    getName() {
-        return this.name;
-    }
-
-    getMonstersDefeated() {
-        return this._monstersDefeated;
     }
 
     showStatus() {
         console.log("\n--- STATUS ---");
         console.log(
-            `Hero: ${this.name} | HP: ${this._hp} | Potions: ${this._potions}`,
+            `Hero: ${this.getName()} | HP: ${this.getHp()} | Potions: ${this.getHpPotions()}`,
         );
         console.log(`Monsters Defeated: ${this.getMonstersDefeated()}`);
         console.log("----------------");
     }
 
-    usePotion() {
+    useHpPotion() {
         if (this._potions > 0) {
-            this._potions--;
+            this._hpPotions--;
             this._hp += 20;
-            console.log(`${this.name} used a potion and healed 20 HP.`);
+            console.log(`${this.getName()} used a potion and healed 20 HP.`);
         } else {
             console.log("You have no more potions!");
         }
 
     }
 
-    addPotion() {
-        this._potions++;
+    getHpPotions() {
+        return this._HpPotions;
+    }
+
+    addHpPotion() {
+        this._hpPotions++;
+    }
+
+    getMonstersDefeated() {
+        return this._monstersDefeated;
     }
 
     incrementMonstesDefeated() {
