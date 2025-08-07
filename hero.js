@@ -1,13 +1,12 @@
-class Hero {
+const Character = require("./character.js");
+
+class Hero extends Character{
     constructor(name) {
+        super(50);
         this.name = name;
         this._hp = 50;
         this._potions = 3;
         this.monstersDefeated = 0;
-    }
-
-    getHp() {
-        return this._hp;
     }
 
     getName() {
@@ -25,13 +24,6 @@ class Hero {
         );
         console.log(`Monsters Defeated: ${this.getMonstersDefeated()}`);
         console.log("----------------");
-    }
-
-    takeDamage(amount) {
-        this._hp -= amount;
-        if (this._hp < 0) {
-            this._hp = 0;
-        }
     }
 
     usePotion() {
